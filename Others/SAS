@@ -1,0 +1,31 @@
+/* Right Trim */
+substr(Item,length(Item)-3); /*---- Extrct the last 4 characters from the column */
+
+-----------------------------------------------------------------------------------------
+/* Left Trim */
+substr(Item,1,11) /*  Extract the first 11 characters from the column Item*/
+
+-----------------------------------------------------------------------------------------
+/* Macro */
+options validvarname=any;
+%macro files(name);
+PROC IMPORT 
+DATAFILE="/home/u48694612/sasuser.v94/&name..xlsx"
+OUT=WORK."&name."n  /*For the names that have a space between them*/
+DBMS=xlsx
+REPLACE;
+GETNAMES=YES; 
+RUN;
+
+%mend;
+
+%files(CarPurchase);
+%files(commercial rent);
+
+--------------------------------------------------------------------------------------------
+
+/* SQL */
+proc sql;
+create table table_name as
+	select columns from table where condition;
+quit;
