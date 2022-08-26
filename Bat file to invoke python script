@@ -1,0 +1,9 @@
+set root=c:\ProgramData\Anaconda3
+call %root%\Scripts\activate.bat
+"Location of the .py file"
+
+@pause
+
+or 
+
+exit 0
