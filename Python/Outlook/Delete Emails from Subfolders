@@ -1,0 +1,102 @@
+def outlook_is_running():
+    import win32ui
+    try:
+        win32ui.FindWindow(None, "Microsoft Outlook")
+        return True
+    except win32ui.error:
+        return False
+
+if not outlook_is_running():
+    import os
+    os.startfile ("outlook")
+
+
+#Connecting to outlook
+import win32com.client as client
+import pandas as pd
+import datetime
+from pandas import DataFrame
+from win32com.client import Dispatch
+import win32com.client as client
+from pandas import DataFrame
+import numpy as np
+import sys
+import os
+from datetime import datetime
+import datetime
+from datetime import timedelta
+
+outlook = client.Dispatch('Outlook.Application')
+namespace = outlook.GetNameSpace("MAPI")
+account=namespace.Folders['krrish1606@gmail.com'] # Change the folder name here
+inbox=account.Folders['Inbox']
+inbox. Items.count
+
+p=[]
+
+for folder in inbox.Folders:
+    p.append(folder.name)
+
+fn=DataFrame(p,columns=['Main_Folder'])
+fn['Sub_Folder']=''
+
+
+z=[]
+x=[]
+
+for j in fn.index:
+    for folder in inbox.Folders[fn['Main_Folder'][j]].Folders:
+        x.append(fn['Main_Folder'][j])
+        z.append(folder.Name)
+        
+new=pd.DataFrame(columns=['Main_Folder','Sub_Folder'])
+new=pd.DataFrame(data={'Main_Folder':x,'Sub_Folder':z})
+
+a=pd.concat([fn,new])
+a=a.reset_index()
+a=a.drop(columns=['index'])
+a1=a[a['Sub_Folder']!='']
+a1=a1.reset_index()
+a1=a1[['Main_Folder','Sub_Folder']]
+
+
+received_dt = datetime.date.today() - timedelta(days=30) #30 represents 30 days older emails.
+received_dt1 = datetime.date.today() - timedelta(days=45) #45 represents 45 days older emails.
+
+
+try:
+    for k in a.index:
+        for mail in reversed(inbox.Folders[a['Main_Folder'][k]].Items):
+          if mail.MessageClass == 'IPM.Outlook.Recall':
+            print('Bad Email')
+          elif mail.Senton.date() <= received_dt:
+            mail.Move(account.Folders['Deleted Items'])
+except:
+    print("NA")
+
+
+try:
+    for k in a1.index:
+        for mail in reversed(inbox.Folders[a1['Main_Folder'][k]].Folders[a1['Sub_Folder'][k]].Items):
+          if mail.MessageClass == 'IPM.Outlook.Recall':
+            print('Bad Email')
+          elif mail.Senton.date() <= received_dt:
+            mail.Move(account.Folders['Deleted Items'])
+except:
+    print("NA")
+
+
+try:
+    for k in a.index:
+        for mail in reversed(inbox.Items):
+          if mail.MessageClass == 'IPM.Outlook.Recall':
+            print('Bad Email')
+          elif mail.Senton.date() <= received_dt1:
+            mail.Move(account.Folders['Deleted Items'])
+except:
+    print("NA")
+
+
+
+for i in range(len(account.Folders['Deleted Items'].Items)):
+    account.Folders['Deleted Items'].Items.Remove(1)

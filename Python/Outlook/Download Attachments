@@ -1,0 +1,29 @@
+from win32com.client import Dispatch
+import win32com.client as client
+import pandas as pd
+from pandas import DataFrame
+import datetime
+import numpy as np
+import sys
+import os
+from datetime import date, timedelta
+
+outlook = client.Dispatch('Outlook.Application')
+namespace = outlook.GetNameSpace("MAPI")
+account=namespace.Folders['dd@email.com'] #Change the mailbox name
+inbox=account.Folders['Inbox']
+
+received_dt = datetime.date.today() - timedelta(days=0) #0 represents todays date.
+
+received_dt1 = received_dt.strftime('%m/%d/%Y %H:%M %p')
+all_inbox = inbox.Items
+all_inbox= all_inbox.Restrict("[ReceivedTime] >= '"+received_dt1+"'")
+
+
+sub_today = 'attach' #Change the Subject name
+
+for msg in list (all_inbox) :
+    if msg.Subject.find(sub_today) != -1 and 'KUMAR' in msg.SenderEmailAddress.upper() and msg.Senton.date() >= received_dt:
+        for att in msg.Attachments:
+            att.SaveAsFile('\\\\location\\location\\location\\location' + '\\'+att.FileName) #Change the location, include double '\\'
+            print ("SUCCESSFUL: Attachments Downloaded")
