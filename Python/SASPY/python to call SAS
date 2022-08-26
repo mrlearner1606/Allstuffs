@@ -1,0 +1,4 @@
+# Create a egp file of the SAS and put all the SAS scripts within one SAS Script using include function
+
+import os
+os.system(r'K:\vbs\saspy.vbs "K:\py\sasfile.egp"')

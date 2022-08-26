@@ -1,0 +1,10 @@
+/* Save it as EGP file */
+
+%macro any_name;
+
+%include "location of SAS file1" ;
+%include "location of SAS file2" ;
+
+%mend;
+
+%any_name;
